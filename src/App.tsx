@@ -10,15 +10,16 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/react";
-import postData from "./data/posts.json";
+//import postData from "./data/posts.json";
 import type { Post } from "./types/post";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "./utils/supabase";
 
 function App() {
     // "Posts" is the current list of posts shown
     // "setPost" is how React updates what is shown
     // Start with tweets from JSON file
-    const [posts, setPost] = useState<Post[]>(postData as Post[])
+    const [posts, setPost] = useState<Post[]>([]);
 
     // "Input" is what is currently typed in the box
     // setInput is how React knows about newly typed data
@@ -39,6 +40,20 @@ function App() {
         setPost([newPost, ...posts]);
         setInput("");
     }
+
+    useEffect(() => {
+        async function load() {
+            const { data, error } = await supabase
+            .from("posts")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+            if (error) console.error(error);
+            else setPost(data || []);
+        }
+
+        load();
+    }, []);
     // Save the current time once during this render.
     const currentTime = new Date().toISOString();
 
@@ -81,7 +96,7 @@ function App() {
                         // When clicked, run code
                         onClick={handlePeakclick}
                         >
-                            Peak
+                            Post
                         </Button>
                     </VStack>
                 </Box>
