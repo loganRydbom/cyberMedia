@@ -12,7 +12,7 @@ import {
 import { Avatar } from "@chakra-ui/react";
 //import postData from "./data/posts.json";
 import type { Post } from "./types/post";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "./utils/supabase";
 
 function App() {
